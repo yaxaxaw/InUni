@@ -1,0 +1,19 @@
+# ENV
+.env
+
+# IntelliJ
+.idea/
+*.iml
+
+# MacOS
+.DS_Store
+
+# Node
+node_modules/
+
+# Build
+dist/
+target/
+
+# Logs
+*.log
