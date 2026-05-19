@@ -1,0 +1,32 @@
+# ============================================
+# ENVIRONMENT VARIABLES - NEVER COMMIT!
+# ============================================
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# API Keys and Secrets
+*.key
+*.pem
+secrets/
+config/secrets*
+
+# IntelliJ
+.idea/
+*.iml
+
+# MacOS
+.DS_Store
+
+# Node
+node_modules/
+
+# Build
+dist/
+target/
+
+# Logs
+*.log
