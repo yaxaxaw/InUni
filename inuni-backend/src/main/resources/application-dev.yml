@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/inuni
-    username: inuni_user
-    password: dreamteam
+    url: jdbc:postgresql://localhost:5432/inuni
+    username: postgres
+    password: change_me
 
   jpa:
     hibernate:
