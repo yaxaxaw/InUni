@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: inuni-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-inuni}
+      POSTGRES_USER: ${DB_USER:-inuni_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-inuni_local_dev_password}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inuni_user -d inuni"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend/backend
+    container_name: inuni-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - PORT=8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/backend:/app
+      - /app/node_modules
+      - uploads_data:/app/uploads
+
+  frontend:
+    build: ./inuni-frontend
+    container_name: inuni-frontend
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8080
+    depends_on:
+      - backend
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: inuni-pgadmin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@inuni.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  uploads_data:
