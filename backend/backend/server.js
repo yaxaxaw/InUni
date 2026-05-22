@@ -233,6 +233,7 @@ async function initDB() {
     await pool.query(`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS resume TEXT`);
     await pool.query(`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS rank_level INTEGER DEFAULT 1`);
     await pool.query(`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS rank_notified_level INTEGER DEFAULT 1`);
+    await pool.query(`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS education TEXT`);
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS teams (
