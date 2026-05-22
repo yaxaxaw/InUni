@@ -1,6 +1,6 @@
 import { postJson } from './client'
 
-const GROQ_API_KEY = 'import.meta.env.VITE_GROQ_API_KEY || '''
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || ''
 
 export async function analyzeProfile(profile) {
   const prompt = `Проанализируй профиль разработчика и дай 3 конкретных рекомендации по развитию:
