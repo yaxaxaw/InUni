@@ -910,6 +910,13 @@ export default {
         
         this.profile = { ...updatedProfile, githubHandle: getHandle(updatedProfile.github), linkedinHandle: getHandle(updatedProfile.linkedin) }
         
+        if (this.authStore.profile) {
+          this.authStore.profile.profile_photo = this.draftProfilePhoto
+          this.authStore.profile.first_name = this.draftProfile.firstName
+          this.authStore.profile.last_name = this.draftProfile.lastName
+          this.authStore.profile.role = this.draftProfile.role
+        }
+        
         this.isEditing = false
         this.showToast('Профиль сохранён в облаке ✓')
       } else {
