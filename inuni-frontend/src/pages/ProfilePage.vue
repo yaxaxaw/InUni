@@ -1011,29 +1011,31 @@ ${profileSummary}`)
       this.aiError = ''
       const p = this.isEditing ? this.draftProfile : this.profile
       try {
-        // 1. Генерируем текст "О себе" через AI
-        const profileSummary = `
-Имя: ${p.firstName} ${p.lastName}
-Роль: ${p.role || 'не указана'}
-Направление: ${p.direction || 'не указано'}
-Курс: ${p.course || 'не указан'}
-Навыки: ${(this.draftSkills || p.interests || []).join(', ') || 'не выбраны'}
-Заполненность профиля: ${this.completion}%
-        `.trim()
-
-        const systemPrompt = `Ты — AI-советник платформы InUni для студентов. 
-Создай краткий текст "О себе" (2-3 предложения) для профиля студента на основе данных.
-Тон: профессиональный но дружелюбный. Упомяни роль, навыки и цели (хакатоны, стартапы).
-Отвечай ТОЛЬКО текстом без markdown, без пояснений.`
-
-        const userMessage = `Создай текст "О себе" для профиля студента:\n${profileSummary}`
-        
-        const bioText = await this.callAI(systemPrompt, userMessage)
-        
-        if (bioText === null) {
-          this.aiError = 'AI недоступен: не настроен VITE_GROQ_API_KEY'
+        const token = localStorage.getItem('accessToken')
+        const res = await fetch(`${API_BASE_URL}/api/ai/profile/generate-bio`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            profile: {
+              firstName: p.firstName,
+              lastName: p.lastName,
+              role: p.role || '',
+              direction: p.direction || '',
+              course: p.course || '',
+              interests: this.draftSkills || p.interests || [],
+              about: p.about || '',
+            }
+          }),
+        })
+        if (!res.ok) {
+          this.aiError = 'AI недоступен'
           return
         }
+        const data = await res.json()
+        const bioText = data.bio || ''
         if (bioText) {
           if (this.isEditing) {
             this.draftProfile.about = bioText.trim()
@@ -1043,9 +1045,7 @@ ${profileSummary}`)
           }
         }
 
-        // 2. Анализируем профиль и даем рекомендации
         await this.analyzeProfile()
-        
         this.showToast('✨ Текст сгенерирован и рекомендации получены')
       } catch (e) {
         this.aiError = e.message

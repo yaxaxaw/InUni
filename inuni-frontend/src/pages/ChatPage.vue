@@ -497,7 +497,7 @@ export default {
         const token = localStorage.getItem('accessToken')
         const userId = this.authStore.userId
         if (!userId) return
-        const res = await fetch(`/api/teams/user/${userId}`, {
+        const res = await fetch(`${API_BASE}/api/teams/user/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (!res.ok) return
