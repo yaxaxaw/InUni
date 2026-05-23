@@ -1211,10 +1211,33 @@ app.post('/api/ai/profile/analyze', async (req, res) => {
   res.json({ suggestions });
 });
 
-app.post('/api/ai/profile/generate-bio', async (req, res) => {
-  const p = req.body;
-  const bio = `${p.firstName || p.first_name} — ${p.role || 'разработчик'} с интересом к ${(p.interests || []).slice(0, 2).join(', ') || 'новым технологиям'}. Участвует в хакатонах и открыт к сотрудничеству.`;
-  res.json({ bio });
+app.post('/api/ai/profile/generate-bio', authenticateToken, async (req, res) => {
+  try {
+    const p = req.body.profile || req.body
+    const groqKey = process.env.GROQ_API_KEY
+    if (!groqKey) {
+      const bio = `${p.firstName || p.first_name || 'Студент'} — ${p.role || 'разработчик'} с интересом к ${(p.interests || []).slice(0, 2).join(', ') || 'новым технологиям'}. Участвует в хакатонах и открыт к сотрудничеству.`
+      return res.json({ bio })
+    }
+    const profileSummary = `Имя: ${p.firstName || p.first_name || ''} ${p.lastName || p.last_name || ''}\nРоль: ${p.role || 'не указана'}\nНаправление: ${p.direction || 'не указано'}\nКурс: ${p.course || 'не указан'}\nНавыки: ${(p.interests || []).join(', ') || 'не выбраны'}\nО себе: ${p.about || 'не заполнено'}`
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${groqKey}` },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 300,
+        messages: [
+          { role: 'system', content: 'Создай краткий текст О себе (2-3 предложения) для профиля студента IT-платформы InUni. Тон профессиональный, дружелюбный. Отвечай ТОЛЬКО текстом без markdown.' },
+          { role: 'user', content: `Создай текст О себе:\n${profileSummary}` }
+        ]
+      })
+    })
+    const data = await response.json()
+    const bio = data.choices?.[0]?.message?.content?.trim() || ''
+    res.json({ bio })
+  } catch (err) {
+    res.status(500).json({ error: 'AI недоступен' })
+  }
 });
 
 app.get('/api/health', (req, res) => {

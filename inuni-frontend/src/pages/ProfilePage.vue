@@ -1051,28 +1051,22 @@ ${profileSummary}`)
 
     // ── AI API METHOD ──
     async callAI(systemPrompt, userMessage) {
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      const token = localStorage.getItem('accessToken')
+      const res = await fetch(`${API_BASE_URL}/api/ai/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + this.ANTHROPIC_KEY,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          max_tokens: 1000,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userMessage },
-          ],
+          message: userMessage,
+          history: [{ role: 'system', content: systemPrompt }],
+          userProfile: {},
         }),
       })
-      if (!res.ok) {
-        const e = await res.json().catch(() => ({}))
-        if (res.status === 401) return null
-        throw new Error(e.error?.message || `HTTP ${res.status}`)
-      }
+      if (!res.ok) return null
       const data = await res.json()
-      return data.choices?.[0]?.message?.content || ''
+      return data.reply || ''
     },
 
   },
