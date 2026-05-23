@@ -503,7 +503,7 @@ export default {
       aiGeneratingBio: false,
       aiError: '',
       aiRecommendations: [],
-      ANTHROPIC_KEY: 'import.meta.env.VITE_GROQ_API_KEY || ''',
+      ANTHROPIC_KEY: import.meta.env.VITE_GROQ_API_KEY || '',
       achievement: {
         total: 0, teamCount: 0, eventCount: 0,
         currentRank: { level: 1, name: 'Новичок', emoji: '🌱', minParticipations: 0 },
