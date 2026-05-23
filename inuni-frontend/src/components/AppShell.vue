@@ -42,6 +42,41 @@
     <main class="main-content">
       <slot />
     </main>
+
+    <nav class="mobile-bottom-nav" v-if="!isAdmin">
+      <RouterLink to="/profile" class="mob-nav-item" @click.native="clearUnread">
+        <span class="mob-nav-icon-wrap">
+          <AppIcon name="user" :size="22" />
+        </span>
+        <span class="mob-nav-label">Профиль</span>
+      </RouterLink>
+      <RouterLink to="/swipe" class="mob-nav-item">
+        <span class="mob-nav-icon-wrap">
+          <AppIcon name="sparkles" :size="22" />
+        </span>
+        <span class="mob-nav-label">Знакомства</span>
+      </RouterLink>
+      <RouterLink to="/teams" class="mob-nav-item">
+        <span class="mob-nav-icon-wrap">
+          <AppIcon name="trophy" :size="22" />
+        </span>
+        <span class="mob-nav-label">Команды</span>
+      </RouterLink>
+      <RouterLink to="/chat" class="mob-nav-item" @click.native="clearUnread">
+        <span class="mob-nav-icon-wrap">
+          <AppIcon name="chat" :size="22" />
+          <span v-if="unreadDm > 0" class="mob-nav-badge">{{ unreadDm > 9 ? '9+' : unreadDm }}</span>
+        </span>
+        <span class="mob-nav-label">Чат</span>
+      </RouterLink>
+      <RouterLink to="/friends" class="mob-nav-item" @click.native="clearFriendBadge">
+        <span class="mob-nav-icon-wrap">
+          <AppIcon name="users" :size="22" />
+          <span v-if="pendingFriends > 0" class="mob-nav-badge">{{ pendingFriends > 9 ? '9+' : pendingFriends }}</span>
+        </span>
+        <span class="mob-nav-label">Друзья</span>
+      </RouterLink>
+    </nav>
   </div>
 </template>
 
@@ -401,6 +436,78 @@ export default {
 
   .main-content {
     margin-left: 0;
+    padding-bottom: 72px;
+  }
+}
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(15, 22, 41, 0.97);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    height: 64px;
+    padding-bottom: env(safe-area-inset-bottom);
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .mob-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 1;
+    height: 100%;
+    text-decoration: none;
+    color: rgba(136, 145, 178, 0.7);
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .mob-nav-item.router-link-active {
+    color: #e63946;
+  }
+
+  .mob-nav-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mob-nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .mob-nav-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: #e63946;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
   }
 }
 </style>
