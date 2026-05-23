@@ -286,6 +286,8 @@ import AppIcon from '../components/AppIcon.vue'
 import { getHackathons } from '../api/admin.js'
 import { useAuthStore } from '../stores/auth.js'
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
+
 export default {
   name: 'EventsPage',
   components: {
@@ -403,7 +405,8 @@ export default {
     },
     getEventImageStyle(event) {
       if (event.image_url) {
-        return { backgroundImage: `url(${event.image_url})` }
+        const url = event.image_url.startsWith('http') ? event.image_url : `${API_BASE}${event.image_url}`
+        return { backgroundImage: `url(${url})` }
       }
       const gradients = {
         active: 'linear-gradient(135deg, #e63946 0%, #7c3aed 100%)',
@@ -445,7 +448,7 @@ export default {
     async checkRegistration(eventId) {
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch(`/api/events/${eventId}/my-registration`, {
+        const res = await fetch(`${API_BASE}/api/events/${eventId}/my-registration`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         const data = await res.json()
@@ -477,7 +480,7 @@ export default {
               contact: this.regForm.contact,
               message: this.regForm.message,
             }
-        const res = await fetch(`/api/events/${this.selectedEvent.id}/register`, {
+        const res = await fetch(`${API_BASE}/api/events/${this.selectedEvent.id}/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

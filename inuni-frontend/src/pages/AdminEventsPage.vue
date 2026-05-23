@@ -90,7 +90,7 @@
                 <th>Дата</th>
                 <th>Статус</th>
                 <th>Формат</th>
-                <th>Команды</th>
+                <th>Участники/Команды</th>
                 <th>Действия</th>
               </tr>
             </thead>
@@ -115,7 +115,10 @@
                   </span>
                 </td>
                 <td>{{ event.format === 'online' ? 'Онлайн' : 'Офлайн' }}</td>
-                <td>{{ event.max_teams || '–' }}</td>
+                <td>
+                  <span v-if="event.event_type === 'hackathon' || event.requires_team">{{ event.max_teams ? event.max_teams + ' команд' : '–' }}</span>
+                  <span v-else>{{ event.max_teams ? event.max_teams + ' чел.' : '–' }}</span>
+                </td>
                 <td>
                   <div class="actions">
                     <button class="btn-icon" @click="openEditModal(event)" title="Редактировать">
@@ -485,7 +488,10 @@ export default {
           body: formData
         })
         const data = await res.json()
-        if (data.photoUrl) this.form.image_url = data.photoUrl
+        if (data.photoUrl) {
+          const base = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
+          this.form.image_url = data.photoUrl.startsWith('http') ? data.photoUrl : `${base}${data.photoUrl}`
+        }
       } catch (err) {
         alert('Ошибка загрузки фото')
       } finally {
