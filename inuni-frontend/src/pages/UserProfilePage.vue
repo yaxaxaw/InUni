@@ -192,7 +192,7 @@ const COLORS = [
 function fullUrl(p) {
   if (!p) return ''
   if (p.startsWith('http')) return p
-  return p
+  return `${API_BASE}${p}`
 }
 
 export default {
