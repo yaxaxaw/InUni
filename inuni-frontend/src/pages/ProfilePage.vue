@@ -426,7 +426,7 @@ import {
   SOFT_SKILL_GROUPS,
 } from '../lib/universityProfile'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
 function getPhotoUrl(photoPath) {
   if (!photoPath) return ''
   if (photoPath.startsWith('http')) return photoPath
@@ -579,7 +579,7 @@ export default {
       const token = localStorage.getItem('accessToken')
       const userId = this.authStore.userId
       if (userId && token) {
-        const res = await fetch(`/api/profiles/${userId}`, {
+        const res = await fetch(`${API_BASE_URL}/api/profiles/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.ok) {
@@ -608,7 +608,7 @@ export default {
         const token = localStorage.getItem('accessToken')
         const userId = this.authStore.userId
         if (!userId || !token) return
-        const res = await fetch(`/api/achievements/${userId}`, {
+        const res = await fetch(`${API_BASE_URL}/api/achievements/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (!res.ok) return
@@ -631,7 +631,7 @@ export default {
         const token = localStorage.getItem('accessToken')
         const userId = this.authStore.userId
         console.log('[Gallery] userId:', userId, 'hasToken:', !!token)
-        const res = await fetch(`/api/profiles/${userId}/photos`, {
+        const res = await fetch(`${API_BASE_URL}/api/profiles/${userId}/photos`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
           body: formData
@@ -663,7 +663,7 @@ export default {
         const token = localStorage.getItem('accessToken')
         const userId = this.authStore.userId
         const rawUrl = photoUrl.replace(/^https?:\/\/[^/]+/, '')
-        await fetch(`/api/profiles/${userId}/photos`, {
+        await fetch(`${API_BASE_URL}/api/profiles/${userId}/photos`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ photoUrl: rawUrl })
@@ -684,7 +684,7 @@ export default {
         const userId = this.authStore.userId
         const formData = new FormData()
         formData.append('resume', file)
-        const res = await fetch(`/api/profiles/${userId}/resume`, {
+        const res = await fetch(`${API_BASE_URL}/api/profiles/${userId}/resume`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
           body: formData
@@ -699,7 +699,7 @@ export default {
       try {
         const token = localStorage.getItem('accessToken')
         const userId = this.authStore.userId
-        await fetch(`/api/profiles/${userId}/resume`, {
+        await fetch(`${API_BASE_URL}/api/profiles/${userId}/resume`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         })
@@ -1016,6 +1016,10 @@ ${profileSummary}`)
         
         const bioText = await this.callAI(systemPrompt, userMessage)
         
+        if (bioText === null) {
+          this.aiError = 'AI недоступен: не настроен VITE_GROQ_API_KEY'
+          return
+        }
         if (bioText) {
           if (this.isEditing) {
             this.draftProfile.about = bioText.trim()
@@ -1057,6 +1061,7 @@ ${profileSummary}`)
       })
       if (!res.ok) {
         const e = await res.json().catch(() => ({}))
+        if (res.status === 401) return null
         throw new Error(e.error?.message || `HTTP ${res.status}`)
       }
       const data = await res.json()

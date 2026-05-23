@@ -549,7 +549,7 @@ export default {
     async loadChannelMessages(channelId) {
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch(`/api/messages/general/${channelId}`, {
+        const res = await fetch(`${API_BASE}/api/messages/general/${channelId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.status === 401) { this.$router.push('/login'); return }
@@ -575,7 +575,7 @@ export default {
         try {
           const token = localStorage.getItem('accessToken')
           const since = this.lastChannelMsgId[ch] || 0
-          const res = await fetch(`/api/messages/general/${ch}?since=${since}`, {
+          const res = await fetch(`${API_BASE}/api/messages/general/${ch}?since=${since}`, {
             headers: { Authorization: `Bearer ${token}` }
           })
           const data = await res.json()
@@ -597,7 +597,7 @@ export default {
       this.messagesLoading = true
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch(`/api/messages/${teamId}`, {
+        const res = await fetch(`${API_BASE}/api/messages/${teamId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.status === 401) { this.$router.push('/login'); return }
@@ -625,7 +625,7 @@ export default {
         try {
           const token = localStorage.getItem('accessToken')
           const since = this.lastTeamMsgId[teamId] || 0
-          const res = await fetch(`/api/messages/${teamId}?since=${since}`, {
+          const res = await fetch(`${API_BASE}/api/messages/${teamId}?since=${since}`, {
             headers: { Authorization: `Bearer ${token}` }
           })
           if (res.status === 401) { clearInterval(this.teamPollingTimer); this.$router.push('/login'); return }
@@ -791,7 +791,7 @@ export default {
     async loadDmHistory(otherUserId) {
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch(`/api/dm/${otherUserId}`, {
+        const res = await fetch(`${API_BASE}/api/dm/${otherUserId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.status === 401) { this.$router.push('/login'); return }
@@ -827,7 +827,7 @@ export default {
         if (!this.activeDm || !this.activeDmUserId) return
         try {
           const token = localStorage.getItem('accessToken')
-          const res = await fetch(`/api/dm/${otherUserId}?since=${this.lastDmMsgId}`, {
+          const res = await fetch(`${API_BASE}/api/dm/${otherUserId}?since=${this.lastDmMsgId}`, {
             headers: { Authorization: `Bearer ${token}` }
           })
           const data = await res.json()
