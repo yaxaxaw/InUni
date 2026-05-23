@@ -303,7 +303,7 @@
                 </div>
                 <div class="form-group">
                   <label>Локация</label>
-                  <input v-model="form.location" type="text" placeholder="Например: КБТУ, Алматы">
+                  <input v-model="form.location" type="text" placeholder="Например: AIU, Алматы">
                 </div>
                 <div class="form-group">
                   <label>Статус *</label>
@@ -391,7 +391,7 @@
               <div class="form-row two-col">
                 <div class="form-group">
                   <label>Название организатора</label>
-                  <input v-model="form.organizer_name" type="text" placeholder="Например: КБТУ + TechHub">
+                  <input v-model="form.organizer_name" type="text" placeholder="Например: AIU + TechHub">
                 </div>
                 <div class="form-group">
                   <label>Контакт организатора</label>

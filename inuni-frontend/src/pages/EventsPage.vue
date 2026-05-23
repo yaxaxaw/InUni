@@ -10,7 +10,7 @@
         
         <div class="page-header">
           <span class="section-label">МЕРОПРИЯТИЯ</span>
-          <h1 class="page-title">Все события КБТУ</h1>
+          <h1 class="page-title">Все события AIU</h1>
           <p class="page-subtitle">Хакатоны, воркшопы, лекции и митапы для студентов</p>
         </div>
 
@@ -129,7 +129,7 @@
               <AppIcon name="map-pin" :size="18" />
               <div>
                 <span class="meta-label">Формат</span>
-                <span class="meta-value">{{ selectedEvent.format === 'online' ? 'Онлайн' : selectedEvent.location || 'КБТУ' }}</span>
+                <span class="meta-value">{{ selectedEvent.format === 'online' ? 'Онлайн' : selectedEvent.location || 'AIU' }}</span>
               </div>
             </div>
             <div class="meta-item" v-if="selectedEvent.prize_fund">
@@ -211,7 +211,7 @@
               <template v-if="selectedEvent.requires_team !== false">
                 <div class="form-group">
                   <label>Название команды *</label>
-                  <input v-model="regForm.team_name" type="text" placeholder="Например: KBTU Stars" required />
+                  <input v-model="regForm.team_name" type="text" placeholder="Например: AIU Stars" required />
                 </div>
                 <div class="form-group">
                   <label>Количество участников</label>

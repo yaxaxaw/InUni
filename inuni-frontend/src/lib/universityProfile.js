@@ -1,6 +1,6 @@
 /** InUni — только для одного университета (внутреннее использование) */
-export const UNIVERSITY_NAME = 'КБТУ'
-export const UNIVERSITY_TAGLINE = 'Закрытая сеть для студентов КБТУ'
+export const UNIVERSITY_NAME = 'AIU'
+export const UNIVERSITY_TAGLINE = 'Закрытая сеть для студентов AIU'
 
 export const COURSE_OPTIONS = [
   '1 курс',

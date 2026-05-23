@@ -916,7 +916,7 @@
               <div class="hk-form-grid">
                 <div class="hk-form-group hk-full">
                   <label>Название команды *</label>
-                  <input v-model="hackathonRegForm.team_name" type="text" placeholder="Например: KBTU Stars" />
+                  <input v-model="hackathonRegForm.team_name" type="text" placeholder="Например: AIU Stars" />
                 </div>
 
                 <div class="hk-form-group">
@@ -1043,7 +1043,7 @@ const DEMO_INCOMING = [
     role: 'Frontend Developer',
     message: 'Хочу применить свои навыки React и Vue в реальном проекте. Есть опыт работы с AI API.',
     skills: ['React', 'Vue.js', 'TypeScript', 'Figma', 'CSS', 'REST API'],
-    university: 'КБТУ',
+    university: 'AIU',
     github: 'https://github.com',
     portfolio: null,
     status: 'pending',
