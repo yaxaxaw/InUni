@@ -373,6 +373,8 @@
 
 <script>
 import AppIcon from '../components/AppIcon.vue'
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
 import AppShell from '../components/AppShell.vue'
 import { buildDmFromMatch } from '../lib/chatUtils'
 import { createInitials, loadAppState } from '../lib/appState'
@@ -515,7 +517,7 @@ export default {
     async loadMatchesIntoDms() {
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch('/api/swipe/matches', {
+        const res = await fetch(`${API_BASE}/api/swipe/matches`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (!res.ok) return
@@ -651,7 +653,7 @@ export default {
         const body = isGeneral
           ? { content: text, channel_type: this.activeChannel }
           : { content: text, team_id: this.activeChannel, channel_type: 'team' }
-        const res = await fetch('/api/messages', {
+        const res = await fetch(`${API_BASE}/api/messages`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify(body)
@@ -857,7 +859,7 @@ export default {
       this.inputText = ''
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch('/api/dm/send', {
+        const res = await fetch(`${API_BASE}/api/dm/send`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ toUserId: this.activeDmUserId, content: text })
@@ -1052,7 +1054,7 @@ export default {
           about: p.about || '',
         }
 
-        const res = await fetch('/api/ai/chat', {
+        const res = await fetch(`${API_BASE}/api/ai/chat`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

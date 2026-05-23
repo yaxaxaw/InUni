@@ -181,7 +181,7 @@ import AppIcon from '../components/AppIcon.vue'
 import { createInitials } from '../lib/appState'
 import { HARD_SKILLS, SOFT_SKILLS } from '../lib/universityProfile'
 
-const API_BASE = ''
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
 const COLORS = [
   'linear-gradient(135deg,#e63946,#1d4ed8)',
   'linear-gradient(135deg,#7c3aed,#2563eb)',
@@ -259,7 +259,7 @@ export default {
     token() { return localStorage.getItem('accessToken') },
     async loadUserAchievement() {
       try {
-        const res = await fetch(`/api/achievements/${this.userId}`, {
+        const res = await fetch(`${API_BASE}/api/achievements/${this.userId}`, {
           headers: { Authorization: `Bearer ${this.token()}` }
         })
         if (res.ok) this.userAchievement = await res.json()
@@ -267,7 +267,7 @@ export default {
     },
     async loadProfile() {
       try {
-        const res = await fetch(`/api/profiles/${this.userId}`, {
+        const res = await fetch(`${API_BASE}/api/profiles/${this.userId}`, {
           headers: { Authorization: `Bearer ${this.token()}` }
         })
         if (!res.ok) { this.user = null; return }
@@ -277,7 +277,7 @@ export default {
     },
     async loadFriendStatus() {
       try {
-        const res = await fetch(`/api/friends/status/${this.userId}`, {
+        const res = await fetch(`${API_BASE}/api/friends/status/${this.userId}`, {
           headers: { Authorization: `Bearer ${this.token()}` }
         })
         const data = await res.json()
@@ -289,14 +289,14 @@ export default {
     },
     async handleFriendAction() {
       if (this.friendStatus === 'pending_incoming') {
-        await fetch('/api/friends/accept', {
+        await fetch(`${API_BASE}/api/friends/accept`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.token()}` },
           body: JSON.stringify({ fromUserId: this.userId })
         })
         this.friendStatus = 'accepted'
       } else if (this.friendStatus === 'none') {
-        const res = await fetch('/api/friends/request', {
+        const res = await fetch(`${API_BASE}/api/friends/request`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.token()}` },
           body: JSON.stringify({ toUserId: this.userId })
@@ -313,7 +313,7 @@ export default {
       this.careerLoading = true
       this.careerGuidance = ''
       try {
-        const res = await fetch('/api/ai/career-guidance', {
+        const res = await fetch(`${API_BASE}/api/ai/career-guidance`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.token()}` },
           body: JSON.stringify({

@@ -478,7 +478,8 @@ export default {
         const formData = new FormData()
         formData.append('photo', file)
         const token = localStorage.getItem('accessToken')
-        const res = await fetch('/api/events/upload-photo', {
+        const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
+        const res = await fetch(`${API_BASE}/api/events/upload-photo`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
           body: formData

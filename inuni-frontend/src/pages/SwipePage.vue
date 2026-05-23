@@ -369,7 +369,7 @@ const CARD_COLORS = [
   'linear-gradient(135deg,#0891b2,#7c3aed)',
 ]
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
 
 const RANK_EMOJIS = ['🌱','🔍','⭐','⚡','👑']
 const RANK_NAMES = ['Новичок','Искатель','Звезда','Мастер','Легенда']
@@ -467,7 +467,7 @@ export default {
       this.swipeDir = 'right';
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch('/api/swipe/like', {
+        const res = await fetch(`${API_BASE}/api/swipe/like`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ toUserId: card.id })
@@ -506,7 +506,7 @@ export default {
       this.swipeDir = 'left';
       try {
         const token = localStorage.getItem('accessToken')
-        await fetch('/api/swipe/skip', {
+        await fetch(`${API_BASE}/api/swipe/skip`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ toUserId: card.id })
@@ -558,7 +558,7 @@ export default {
           console.error('DEBUG: No token!')
           return
         }
-        const res = await fetch('/api/swipe/incoming', {
+        const res = await fetch(`${API_BASE}/api/swipe/incoming`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         const data = await res.json()
@@ -631,7 +631,7 @@ export default {
     async acceptIncoming(user) {
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch('/api/swipe/like', {
+        const res = await fetch(`${API_BASE}/api/swipe/like`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ toUserId: user.id })
@@ -653,7 +653,7 @@ export default {
     async rejectIncoming(user) {
       try {
         const token = localStorage.getItem('accessToken')
-        await fetch('/api/swipe/skip', {
+        await fetch(`${API_BASE}/api/swipe/skip`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ toUserId: user.id })
@@ -668,7 +668,7 @@ export default {
     async loadMatches() {
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch('/api/swipe/matches', {
+        const res = await fetch(`${API_BASE}/api/swipe/matches`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         const data = await res.json()
@@ -691,7 +691,7 @@ export default {
       this.loadingCards = true
       try {
         const token = localStorage.getItem('accessToken')
-        const res = await fetch('/api/profiles', { headers: { Authorization: `Bearer ${token}` } })
+        const res = await fetch(`${API_BASE}/api/profiles`, { headers: { Authorization: `Bearer ${token}` } })
         const profiles = await res.json()
         if (!res.ok) throw new Error(profiles.error)
         const cards = profiles.map((p, i) => ({

@@ -103,7 +103,7 @@
 import AppShell from '../components/AppShell.vue'
 import { createInitials } from '../lib/appState'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
 const COLORS = ['linear-gradient(135deg,#e63946,#1d4ed8)', 'linear-gradient(135deg,#7c3aed,#2563eb)', 'linear-gradient(135deg,#059669,#0d9488)', 'linear-gradient(135deg,#d97706,#dc2626)']
 
 export default {
@@ -136,13 +136,13 @@ export default {
     },
     async loadFriends() {
       try {
-        const res = await fetch('/api/friends', { headers: { Authorization: `Bearer ${this.token()}` } })
+        const res = await fetch(`${API_BASE}/api/friends`, { headers: { Authorization: `Bearer ${this.token()}` } })
         this.friends = await res.json()
       } catch (e) {}
     },
     async loadIncoming() {
       try {
-        const res = await fetch('/api/friends/incoming', { headers: { Authorization: `Bearer ${this.token()}` } })
+        const res = await fetch(`${API_BASE}/api/friends/incoming`, { headers: { Authorization: `Bearer ${this.token()}` } })
         this.incoming = await res.json()
       } catch (e) {}
     },
@@ -151,13 +151,13 @@ export default {
       if (!this.searchQ.trim()) { this.searchResults = []; return }
       this._searchTimer = setTimeout(async () => {
         try {
-          const res = await fetch(`/api/profiles/search?q=${encodeURIComponent(this.searchQ)}`, {
+          const res = await fetch(`${API_BASE}/api/profiles/search?q=${encodeURIComponent(this.searchQ)}`, {
             headers: { Authorization: `Bearer ${this.token()}` }
           })
           const users = await res.json()
           this.searchResults = await Promise.all(users.map(async u => {
             try {
-              const sr = await fetch(`/api/friends/status/${u.id}`, { headers: { Authorization: `Bearer ${this.token()}` } })
+              const sr = await fetch(`${API_BASE}/api/friends/status/${u.id}`, { headers: { Authorization: `Bearer ${this.token()}` } })
               const sd = await sr.json()
               return { ...u, friendStatus: sd.status }
             } catch { return { ...u, friendStatus: 'none' } }
@@ -167,7 +167,7 @@ export default {
     },
     async sendRequest(user) {
       try {
-        const res = await fetch('/api/friends/request', {
+        const res = await fetch(`${API_BASE}/api/friends/request`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.token()}` },
           body: JSON.stringify({ toUserId: user.id })
@@ -179,7 +179,7 @@ export default {
     },
     async acceptRequest(fromId) {
       try {
-        await fetch('/api/friends/accept', {
+        await fetch(`${API_BASE}/api/friends/accept`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.token()}` },
           body: JSON.stringify({ fromUserId: fromId })
@@ -190,13 +190,13 @@ export default {
     },
     async declineRequest(fromId) {
       try {
-        await fetch(`/api/friends/${fromId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${this.token()}` } })
+        await fetch(`${API_BASE}/api/friends/${fromId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${this.token()}` } })
         this.incoming = this.incoming.filter(u => u.id !== fromId)
       } catch (e) {}
     },
     async removeFriend(userId) {
       try {
-        await fetch(`/api/friends/${userId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${this.token()}` } })
+        await fetch(`${API_BASE}/api/friends/${userId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${this.token()}` } })
         this.friends = this.friends.filter(u => u.id !== userId)
       } catch (e) {}
     },
