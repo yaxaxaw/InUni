@@ -430,7 +430,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD 
 function getPhotoUrl(photoPath) {
   if (!photoPath) return ''
   if (photoPath.startsWith('http')) return photoPath
-  if (photoPath.startsWith('/uploads/')) return photoPath
+  if (photoPath.startsWith('/uploads/')) return `${API_BASE_URL}${photoPath}`
   return photoPath
 }
 
@@ -1077,7 +1077,7 @@ ${profileSummary}`)
         if (fresh) {
           this.authStore.profile = fresh
           const photoUrl = fresh.profile_photo
-            ? (fresh.profile_photo.startsWith('http') ? fresh.profile_photo : `http://localhost:8080${fresh.profile_photo}`)
+            ? (fresh.profile_photo.startsWith('http') ? fresh.profile_photo : `${API_BASE_URL}${fresh.profile_photo}`)
             : ''
           const updated = {
             firstName: fresh.first_name || '',

@@ -51,6 +51,8 @@ import InUniLogo from './InUniLogo.vue'
 import { createInitials } from '../lib/appState'
 import { useAuthStore } from '../stores/auth.js'
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
+
 export default {
   name: 'AppShell',
   components: {
@@ -110,7 +112,7 @@ export default {
         const token = localStorage.getItem('accessToken')
         if (!token) return
         try {
-          const res = await fetch(`/api/dm/unread?since=${this._lastDmId}`, {
+          const res = await fetch(`${API_BASE}/api/dm/unread?since=${this._lastDmId}`, {
             headers: { Authorization: `Bearer ${token}` }
           })
           if (!res.ok) return
@@ -128,7 +130,7 @@ export default {
       const authProfile = this.authStore.profile || {}
       const rawPhoto = authProfile.profile_photo || ''
       const photoUrl = rawPhoto
-        ? (rawPhoto.startsWith('http') ? rawPhoto : `http://localhost:8080${rawPhoto}`)
+        ? (rawPhoto.startsWith('http') ? rawPhoto : `${API_BASE}${rawPhoto}`)
         : ''
       return {
         firstName: authProfile.first_name || '',
