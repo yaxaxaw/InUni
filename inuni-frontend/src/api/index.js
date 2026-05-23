@@ -1,5 +1,7 @@
 import { apiRequest, postJson } from './client.js'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://backend-production-431c.up.railway.app' : 'http://localhost:8080')
+
 // ===== AUTH =====
 export function register(email, password, firstName, lastName) {
   return postJson('/api/auth/register', { email, password, firstName, lastName })
@@ -43,7 +45,7 @@ export function uploadProfilePhoto(userId, file) {
     headers['Authorization'] = `Bearer ${token}`
   }
   
-  return fetch(`/api/profiles/${userId}/photo`, {
+  return fetch(`${API_BASE_URL}/api/profiles/${userId}/photo`, {
     method: 'POST',
     headers,
     body: formData,
