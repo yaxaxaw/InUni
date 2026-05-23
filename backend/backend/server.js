@@ -163,13 +163,15 @@ const uploadResume = multer({
   }
 });
 
-const pool = new Pool({
-  host: process.env.DB_HOST || 'postgres',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'inuni',
-  user: process.env.DB_USER || 'inuni_user',
-  password: process.env.DB_PASSWORD || 'dreamteam'
-});
+const pool = process.env.DATABASE_URL
+  ? new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } })
+  : new Pool({
+      host: process.env.DB_HOST || 'postgres',
+      port: process.env.DB_PORT || 5432,
+      database: process.env.DB_NAME || 'inuni',
+      user: process.env.DB_USER || 'inuni_user',
+      password: process.env.DB_PASSWORD || 'dreamteam'
+    });
 
 function hashPassword(password) {
   return crypto.createHash('sha256').update(password).digest('hex');
