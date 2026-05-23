@@ -964,6 +964,13 @@ LinkedIn: ${p.linkedin || 'не указан'}
         const raw = await this.callAI(systemPrompt, `Проанализируй профиль студента и дай рекомендации по развитию:
 ${profileSummary}`)
         
+        if (!raw) {
+          this.aiRecommendations = [
+            { type: 'tip', icon: '💡', title: 'Добавь навыки', text: 'Укажи конкретные технологии которыми владеешь (React, Python, Figma и т.д.)' },
+            { type: 'tip', icon: '📝', title: 'Заполни «О себе»', text: 'Расскажи о своих проектах и чем хочешь заниматься' },
+          ]
+          return
+        }
         let suggestions = []
         try {
           const jsonMatch = raw.match(/\[[\s\S]*\]/)

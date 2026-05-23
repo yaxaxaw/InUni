@@ -110,7 +110,9 @@ app.use(securityHeaders);
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(validateInput);
-app.use('/uploads', express.static('uploads', {
+const UPLOADS_DIR = path.join(__dirname, 'uploads')
+
+app.use('/uploads', express.static(UPLOADS_DIR, {
   setHeaders: (res, filePath) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     if (filePath.endsWith('.pdf')) {
@@ -122,12 +124,12 @@ app.use('/uploads', express.static('uploads', {
   }
 }));
 
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
+  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '_' + Math.round(Math.random() * 1E9);
     cb(null, 'photo_' + uniqueSuffix + path.extname(file.originalname));
@@ -146,7 +148,7 @@ const upload = multer({
 });
 
 const resumeStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
+  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '_' + Math.round(Math.random() * 1E9);
     cb(null, 'resume_' + uniqueSuffix + path.extname(file.originalname));
