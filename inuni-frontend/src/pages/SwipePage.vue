@@ -88,7 +88,9 @@
               <span v-else>{{ myInitials }}</span>
             </div>
             <div class="ma-heart">❤️</div>
-            <div class="ma ma-them">{{ matchedCardData?.initials || matchedUser?.substring(0,2).toUpperCase() }}</div>
+            <div class="ma ma-them" :style="matchedCardData?.profilePhoto ? { backgroundImage: `url(${matchedCardData.profilePhoto})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}">
+              <span v-if="!matchedCardData?.profilePhoto">{{ matchedCardData?.initials || matchedUser?.substring(0,2).toUpperCase() }}</span>
+            </div>
           </div>
           <div class="match-actions">
             <button class="btn-primary btn-lg" @click="openMatchChat()">Написать сообщение</button>
@@ -441,7 +443,10 @@ export default {
       return Boolean(this.currentUserProfile.profilePhoto)
     },
     myProfilePhoto() {
-      return this.currentUserProfile.profilePhoto || ''
+      const p = this.authStore.profile
+      const raw = p?.profile_photo || this.currentUserProfile.profilePhoto || ''
+      if (!raw) return ''
+      return raw.startsWith('http') ? raw : `${API_BASE}${raw}`
     },
     myInitials() {
       return createInitials(this.currentUserProfile.firstName, this.currentUserProfile.lastName)
@@ -1254,6 +1259,9 @@ export default {
   width: 64px; height: 64px; border-radius: 18px;
   display: grid; place-items: center;
   font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 700; color: #fff;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 .ma-you { background: linear-gradient(135deg, #e63946, #1d4ed8); }
 .ma-them { background: linear-gradient(135deg, #7c3aed, #e63946); }
