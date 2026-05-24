@@ -60,18 +60,18 @@
           </div>
           <div class="hero-stats">
             <div class="stat">
-              <span class="stat-num">2 400+</span>
-              <span class="stat-label">студентов</span>
+              <span class="stat-num">AIU</span>
+              <span class="stat-label">только для студентов</span>
             </div>
             <div class="stat-divider"></div>
             <div class="stat">
-              <span class="stat-num">380+</span>
-              <span class="stat-label">новых знакомств</span>
+              <span class="stat-num">Команды</span>
+              <span class="stat-label">хакатоны и стартапы</span>
             </div>
             <div class="stat-divider"></div>
             <div class="stat">
-              <span class="stat-num">120+</span>
-              <span class="stat-label">команд запущено</span>
+              <span class="stat-num">AI</span>
+              <span class="stat-label">умный подбор</span>
             </div>
           </div>
         </div>
@@ -202,7 +202,7 @@
     
     <section id="modes" class="modes">
       <div class="container">
-        <div class="section-label">Три пространства</div>
+        <div class="section-label">Четыре пространства</div>
         <h2 class="section-title">Общайся, знакомься<br>и строй вместе</h2>
         <div class="modes-list">
           <div
@@ -212,7 +212,7 @@
               :class="{ active: activeMode === i }"
               @click="activeMode = i"
           >
-            <div class="mode-num">0{{ i + 1 }}</div>
+            <div class="mode-num">{{ i < 9 ? '0' + (i + 1) : i + 1 }}</div>
             <div class="mode-body">
               <div class="mode-header">
                 <span class="mode-icon">{{ m.icon }}</span>
@@ -382,22 +382,28 @@ export default {
         },
         {
           icon: '🚀',
-          title: 'Проекты и команды',
-          desc: 'Есть идея стартапа или хакатон на носу? Создай командный слот, опиши задачу и получай заявки от студентов с нужными навыками из твоего универа.',
-          chips: ['Стартап', 'Хакатон', 'Pet-проект', 'Open-source'],
+          title: 'Проекты, команды и карьера',
+          desc: 'Есть идея стартапа или хакатон на носу? Создай командный слот, получай заявки — и здесь же найди стажировку, которая совпадает с твоими навыками.',
+          chips: ['Стартап', 'Хакатон', 'Стажировки', 'Open-source'],
         },
         {
           icon: '💬',
-          title: 'Общий чат универа',
-          desc: 'Единое пространство для всех студентов: задавай вопросы, делись инсайтами, обсуждай идеи и просто общайся с людьми, которые тебя понимают.',
-          chips: ['Вопросы', 'Инсайты', 'Идеи', 'Комьюнити'],
+          title: 'Общий чат и события',
+          desc: 'Единое пространство для всех студентов: задавай вопросы, делись инсайтами, следи за мероприятиями и хакатонами университета.',
+          chips: ['Вопросы', 'Инсайты', 'Мероприятия', 'Хакатоны'],
+        },
+        {
+          icon: '🤖',
+          title: 'AI-ассистент',
+          desc: 'Умный алгоритм анализирует твой профиль и находит подходящих тиммейтов, стажировки с высоким процентом совпадения и даёт персональные карьерные советы.',
+          chips: ['Тиммейты', 'Стажировки', 'Карьерный совет', 'Персонально'],
         },
       ],
       aiFeatures: [
         'Находит студентов с похожим мышлением и интересами',
         'Рекомендует людей с взаимодополняющими навыками',
-        'AI-ассистент помогает заполнить профиль через диалог',
-        'Предлагает нужные роли при создании командного слота',
+        'Подбирает стажировки по твоим навыкам с процентом совпадения',
+        'AI-ассистент помогает заполнить профиль и даёт карьерный совет',
       ],
       aiMatches: [
         { initials: 'ИА', name: 'Искендер Абазов', role: 'Frontend Dev', score: 94 },
