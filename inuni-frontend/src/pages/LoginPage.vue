@@ -67,13 +67,13 @@
             
             <div class="lp-stats">
               <div class="lp-stat">
-                <span class="lp-stat-num">2 400+</span>
-                <span class="lp-stat-label">студентов онлайн</span>
+                <span class="lp-stat-num">AIU</span>
+                <span class="lp-stat-label">только для студентов</span>
               </div>
               <div class="lp-stat-divider"></div>
               <div class="lp-stat">
-                <span class="lp-stat-num">120+</span>
-                <span class="lp-stat-label">активных команд</span>
+                <span class="lp-stat-num">InUni</span>
+                <span class="lp-stat-label">присоединяйся к сообществу</span>
               </div>
             </div>
 
